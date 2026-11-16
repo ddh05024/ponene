@@ -97,12 +97,10 @@ input[type=date]{width:auto;min-width:190px}
   <button id="close">닫기</button></div></div>
 <script>
 var TABS=[
- {id:'pepero',name:'빼빼로',title:'빼빼로데이',season:'',price:15000,ac:'#b4584a',acs:'#f8ece9'},
  {id:'movie',name:'겨울 - 이불 속 영화관',title:'이불 속 영화관',season:' · 겨울',price:15000,ac:'#7f63c0',acs:'#f0ebfa'},
- {name:'겨울 - 비밀 아지트',note:'작업 중',ac:'#4a5fa8'},
- {name:'겨울 - 창문 낙서',note:'작업 중',ac:'#4f84c0'},
- {name:'크리스마스',note:'작업 중',ac:'#9a9a9a'},
- {name:'할로윈',note:'9~10월 신청 오픈',ac:'#9a9a9a'}
+ {id:'xmas',name:'크리스마스 - 우당탕 트리 대작전',note:'11~12월',title:'우당탕 트리 대작전!',season:' · 크리스마스 한정',price:15000,ac:'#b8363f',acs:'#fbeaeb'},
+ {name:'할로윈',note:'9월 신청 오픈',ac:'#9a9a9a'},
+ {id:'pepero',closed:true,name:'빼빼로',note:'10월 신청 오픈',title:'빼빼로데이',season:'',price:15000,ac:'#b4584a',acs:'#f8ece9'}
 ];
 var EXTRA=[['24시간 추가금','×2'],['굿즈 제작','+0.5'],['비공개','+0.5']];
 function slot(l,sub){return '<div><label class="slot"><div class="pv"><span>+ 이미지 업로드</span></div><input type="file" accept="image/*" hidden></label><div class="cap"><span>'+l+(sub?' <small class="hint noexport">'+sub+'</small>':'')+'</span><button type="button" class="rm noexport">삭제</button></div></div>'}
@@ -120,6 +118,8 @@ function body(t){
   s+=sec('배경 컬러','<p class="desc">두 캐릭터의 상징색을 알려주세요!</p>'+color('배경 컬러 1 (도트)')+color('배경 컬러 2 (배경)'));
   s+=sec('빼빼로 위치 <span class="hint noexport">하나만 선택</span>','<div class="opts">'+opt('A가 물고 있게','','pos')+opt('B가 물고 있게','','pos')+opt('둘 다 물고 있게','','pos')+'</div>');
   s+=sec('빼빼로 외 다른 것으로 변경','<div class="opts">'+opt('빼빼로에서 다른 것으로 변경하기','+0.5','',' data-chg')+'</div><div class="chg" style="display:none">'+fld('input','어떤 것으로 바꿀지 적어 주세요. (예: 아몬드 빼빼로)')+'</div>');
+ }else if(t.id==='xmas'){
+  s+=sec('캐릭터 리본 컬러 변경','<p class="desc">각 캐릭터의 리본 컬러를 알려주세요!</p>'+color('캐릭터 A 리본 컬러')+color('캐릭터 B 리본 컬러'));
  }else{
   s+=sec('태블릿 로고 <span class="hint noexport">이미지 또는 텍스트 중 선택</span>','<div class="seg noexport"><button type="button" class="on" data-m="img">이미지 업로드</button><button type="button" data-m="txt">텍스트 설명</button></div>'
    +'<div class="logo-img" data-p="img">'+slot('')+'</div><div data-p="txt" style="display:none">'+fld('textarea','예) 흰 배경에 파란색 별 모양 로고')+'</div>');
@@ -142,9 +142,9 @@ var tabsEl=document.getElementById('tabs'),panels=document.getElementById('panel
 TABS.forEach(function(t){
  var b=document.createElement('button');b.type='button';b.className='tab';b.style.setProperty('--ac',t.ac);
  b.innerHTML=t.name+(t.note?'<small>'+t.note+'</small>':'');
- if(!t.id){b.disabled=true;b.setAttribute('aria-disabled','true')}else b.onclick=function(){show(t.id)};
+ if(!t.id||t.closed){b.disabled=true;b.setAttribute('aria-disabled','true')}else b.onclick=function(){show(t.id)};
  b.dataset.id=t.id||'';tabsEl.appendChild(b);
- if(t.id){var p=document.createElement('section');p.id='p-'+t.id;p.hidden=true;p.style.setProperty('--ac',t.ac);p.style.setProperty('--acs',t.acs);
+ if(t.id&&!t.closed){var p=document.createElement('section');p.id='p-'+t.id;p.hidden=true;p.style.setProperty('--ac',t.ac);p.style.setProperty('--acs',t.acs);
   p.innerHTML='<div class="card"><header><div class="eyebrow">포네네 시즈널 고정틀'+t.season+'</div><h1>'+t.title+'</h1></header>'+body(t)+'<div class="foot">@ponene_cmsn</div></div><div class="actions"><button type="button" class="btn">PNG로 저장하기</button><span class="sm">고화질 PNG로 저장돼요</span></div>';
   panels.appendChild(p);wire(p,t)}
 });
@@ -193,7 +193,7 @@ function wire(p,t){
 }
 document.getElementById('close').onclick=function(){document.getElementById('modal').classList.remove('show')};
 document.getElementById('modal').onclick=function(e){if(e.target===this)this.classList.remove('show')};
-show('pepero');
+show('movie');
 </script>
 </body>
 </html>
